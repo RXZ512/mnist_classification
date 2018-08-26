@@ -44,13 +44,11 @@ with tf.Session() as sess:
 with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
     saver.restore(sess, model_path)
-    correct_prediction = tf.equal(tf.argmax(pred, 1), tf.argmax(y, 1))
-    accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
     print('Accuracy:', accuracy.eval({x: mnist.test.images, y:mnist.test.labels}))
     output = tf.argmax(pred, 1)
-    batch_xs, batch_ys = mnist.train.next_batch(2)
+    batch_xs, batch_ys = mnist.test.next_batch(2)
     outputval, predv = sess.run([output, pred], {x: batch_xs, y: batch_ys})
-    print(outputval, predv, batch_ys)
+    print(outputval, predv, sess.run(tf.argmax(batch_ys, 1)))
     im = batch_xs[0]
     im = im.reshape(-1, 28)
     pylab.imshow(im)
